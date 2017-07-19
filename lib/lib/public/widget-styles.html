@@ -1,0 +1,73 @@
+<dom-module id="widget-styles">
+    <template>
+        <style>
+            :host {
+                height: 100%;
+                width: 100%;
+                display: table-cell;
+                background: #444;
+            }
+            
+            :host .icon {
+                display: none;
+            }
+
+            :host[state=loading-data] .loading {
+                position: absolute;
+                top: 0;
+                left:0;
+                bottom:0;
+                right:0;
+                height:100%;
+                width: 100%;
+            }
+
+            :host[state=loading-data] .loading-inner {
+                position: relative;
+                top: 40%;
+            }
+
+            :host[state=loading-data] .icon:before {
+                content: "\f021";
+             }
+            :host[state=loading-data] .icon {
+                font-family: FontAwesome;
+                animation-name: spin;
+                animation-duration: 1000ms;
+                animation-iteration-count: infinite;
+                animation-timing-function: linear;
+
+                -webkit-animation:  spin 1s linear infinite;
+                -moz-animation:     spin 1s linear infinite;
+                -ms-animation:      spin 1s linear infinite;
+
+                border: 3px solid #FFFFFF;
+                border-radius: 50px 50px 50px 50px;
+                display: block;
+                font-family: FontAwesome;
+                font-size: 40px;
+                height: 40px;
+                margin: 0 auto;
+                padding: 10px;
+                text-align: center;
+                width: 40px;
+                position: relative;
+                top: -50%;
+            }
+
+
+            :host[state=data-error] h1.title:before {
+                content: "\f071";
+                font-family: "FontAwesome";
+                line-height: 1.5em;
+                margin-left: -30px;
+                margin-right: 10px;
+                position: absolute;
+                top: 0;
+                color: #FFA500;
+            }
+
+
+        </style>
+    </template>
+</dom-module>
