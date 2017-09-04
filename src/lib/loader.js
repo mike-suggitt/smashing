@@ -62,7 +62,7 @@ if(!process.env.DISABLE_DASHBOARD) {
     for(var jobType in jobsArray) {
         try {
             var job_path = process.env.JOB_PATH || path.resolve(__dirname, '../jobs');
-            job_path += "\\"+jobType.toLowerCase() + ".js";
+            job_path = path.resolve(job_path, jobType.toLowerCase() + ".js");
 
             var jobClass = require(job_path)();
             var jobGroup = jobsArray[jobType];

@@ -2,6 +2,8 @@ var connections = {};
 var history = {};
 
 var EventService = function() {};
+
+EventService.prototype.bob = Math.random();
 EventService.prototype.addConnection = function(req, res) {
     var conn = {
         id: (new Date().getTime().toString() + Math.floor(Math.random() * 1000).toString()),
@@ -46,4 +48,5 @@ function format_event(body) {
     return 'data: ' + JSON.stringify(body) + '\n\n';
 }
 
-module.exports = new EventService();
+global.__es = global.__es || new EventService();
+module.exports = global.__es;
