@@ -3,7 +3,6 @@ var history = {};
 
 var EventService = function() {};
 
-EventService.prototype.bob = Math.random();
 EventService.prototype.addConnection = function(req, res) {
     var conn = {
         id: (new Date().getTime().toString() + Math.floor(Math.random() * 1000).toString()),
