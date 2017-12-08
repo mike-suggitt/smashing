@@ -1,10 +1,3 @@
-// import express from "express";
-// import path from "path";
-// import * as logger from "morgan";
-// import cookieParser from "cookie-parser";
-// import bodyParser from "body-parser";
-// import fs from "fs";
-
 const hbs = require('hbs');
 const fs = require('fs');
 const express = require('express');
@@ -15,8 +8,9 @@ const mincer = require("./mincer");
 const http = require('http');
 const routes = require('./routes/index');
 const eventService = require('./eventService');
+const loader = require('./loader');
 
-var smashing = {};
+const smashing = {};
 smashing.app = express();
 smashing.eventService = eventService;
 smashing.app.set('views', path.join(process.cwd(), 'dashboards'));
@@ -37,22 +31,15 @@ smashing.mincer.environment.appendPath(path.resolve(__dirname, 'assets/html'));
 smashing.mincer.environment.appendPath(path.resolve(__dirname, 'assets/fonts'));
 smashing.mincer.environment.appendPath(path.resolve(__dirname, 'assets/images'));
 
-// console.log(path.resolve(__dirname, 'assets/html'));
-// var widgetsPath = path.resolve(__dirname, 'widgets');
-// var widgets = fs.readdirSync(widgetsPath);
-// for(var i=0; i<widgets.length;i++) {
-//     var includePath = 'widgets/'+widgets[i];
-//     mincer.environment.appendPath(path.resolve(__dirname,includePath));
-// }
-// smashing.mincer.server = mincer.createServer(smashing.mincer.environment)
+smashing.load = loader.load;
 
 smashing.start = function() {
     smashing.app.set('port', 3000);
     smashing.mincer.start();
     smashing.app.use(smashing.mincer.assets_prefix, smashing.mincer.server);
     smashing.app.use(routes);
-    var server = http.createServer(smashing.app);
+    const server = http.createServer(smashing.app);
     server.listen(3000);
-}
+};
 
 module.exports = smashing;

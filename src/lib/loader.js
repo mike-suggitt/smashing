@@ -1,10 +1,9 @@
-var path = require('path');
-var fs = require('fs');
-var argv = require('yargs').argv;
+const path = require('path');
+const fs = require('fs');
+const argv = require('yargs').argv;
 
-var jobsArray = [];
-
-var configTags = argv.configTags || [];
+const jobsArray = [];
+const configTags = argv.configTags || [];
 
 //Get application configs
 function getConfigs(_base, _dir) {
@@ -51,20 +50,65 @@ function getConfigs(_base, _dir) {
     }
 }
 
+function includeAfterTagFilter() {
 
-var jobs = {};
-var appConfigPath = path.resolve(__dirname, '../config/application');
-getConfigs(appConfigPath, "");
+}
 
-if(!process.env.DISABLE_DASHBOARD) {
-    //Set the Cosmos environment
-    var jobs = [];
+
+
+function buildConfig(basePath, dir) {
+    const target = `${basePath}/${dir}`;
+    const list = fs.readdirSync(target);
+    list.forEach(file => {
+        if(file[0] !== '.') {
+            if(fs.lstatSync(`${target}/${file}`).isDirectory()) {
+                buildConfig(target, file)
+            }
+            else {
+                const config = require(path.resolve(__dirname, `${target}/${file}`));
+                // if(configTags.length > 0 && configTags.indexOf(config.tag) < 0) {
+                //     continue;
+                // }
+                if(!config.exclude) {
+                    const id = `${dir}/${file}`;
+
+                    let jobEnv = "";
+                    if(config.jobs.env) {
+                        jobEnv = config.jobs.env;
+                        delete config.jobs.env;
+                    }
+
+                    for(var jobType in config.jobs) {
+                        for(var jobId in config.jobs[jobType]) {
+                            var newJobId = id + "_" + jobId;
+                            if(!jobsArray[jobType]) {
+                                jobsArray[jobType] = {};
+                            }
+                            jobsArray[jobType][newJobId] = config.jobs[jobType][jobId];
+                            jobsArray[jobType][newJobId].id = jobId;
+                            if(!jobsArray[jobType][newJobId].env && jobEnv) {
+                                jobsArray[jobType][newJobId].env = jobEnv;
+                            }
+                            delete config.jobs[jobType][jobId];
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function load(configPath, jobDirPath) {
+    buildConfig(configPath, '');
+    runJobs(jobDirPath);
+}
+
+function runJobs(jobDirPath) {
     for(var jobType in jobsArray) {
         try {
-            var job_path = process.env.JOB_PATH || path.resolve(__dirname, '../jobs');
-            job_path = path.resolve(job_path, jobType.toLowerCase() + ".js");
+            const jobPath = path.resolve(jobDirPath, jobType.toLowerCase() + ".js");
 
-            var jobClass = require(job_path)();
+            var jobClass = require(jobPath);
             var jobGroup = jobsArray[jobType];
             for(var id in jobGroup) {
 
@@ -81,3 +125,9 @@ if(!process.env.DISABLE_DASHBOARD) {
         }
     }
 }
+
+
+
+module.exports = {
+    load: load
+};

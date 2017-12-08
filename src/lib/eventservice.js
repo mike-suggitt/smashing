@@ -1,10 +1,10 @@
-var connections = {};
-var history = {};
+const connections = {};
+const history = {};
 
-var EventService = function() {};
+const EventService = function() {};
 
 EventService.prototype.addConnection = function(req, res) {
-    var conn = {
+    const conn = {
         id: (new Date().getTime().toString() + Math.floor(Math.random() * 1000).toString()),
         send: function (body) {
             res.write(body);
@@ -26,17 +26,17 @@ EventService.prototype.addConnection = function(req, res) {
 };
 
 EventService.prototype.trigger = function(body) {
-    var id = body.id || (Math.floor(Math.random()*1001));
+    const id = body.id || (Math.floor(Math.random()*1001));
     body.updatedAt = Date.now();
-    var event = format_event(body);
-    for (var k in connections) {
+    const event = format_event(body);
+    for (const k in connections) {
         connections[k].send(event);
     }
 };
 
 
 function latest_events() {
-    var str = [];
+    const str = [];
     for (var id in history) {
         str.push(history[id]);
     }
