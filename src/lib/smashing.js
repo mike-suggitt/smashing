@@ -7,7 +7,7 @@ const logger = require('morgan');
 const mincer = require("./mincer");
 const http = require('http');
 const routes = require('./routes/index');
-const eventService = require('./eventService');
+const eventService = require('./eventservice');
 const loader = require('./loader');
 
 const smashing = {};
