@@ -1,7 +1,6 @@
 const mincer = require("mincer");
 const path = require("path");
 const logger = require("morgan");
-require('mincer-babel')(mincer);
 
 module.exports = function(smashing) {
 
