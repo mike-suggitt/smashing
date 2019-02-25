@@ -1,4 +1,0 @@
-{
-  "presets": ["es2015-without-strict"],
-  "plugins": ["transform-decorators-legacy"]
-}
