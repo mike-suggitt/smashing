@@ -1,6 +1,6 @@
-var path = require('path');
-var fs = require('fs');
-var argv = require('yargs').argv;
+const path = require('path');
+const fs = require('fs');
+const argv = require('yargs').argv;
 
 var configTags = argv.configTags || [];
 
